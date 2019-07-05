@@ -4,7 +4,18 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 module.exports = {
   modify(config, { target, dev }) {
+
+
     if (target === 'web') {
+
+      const jsRules = config.module.rules[1]
+      jsRules.use.push({
+        loader: 'linaria/loader',
+        options: {
+          sourceMap: dev
+        }
+      })
+
       const paths = glob.sync('./src/views/**/*.js');
 
       config.entry = paths.reduce((prev, curr) => {

@@ -1,12 +1,19 @@
 import { h } from 'preact';
 import { createView } from '../createView'
+import { css } from 'linaria'
 /** @jsx h */
 
 export const Home = createView((props, state) => {
   return (
-    <div class="Preact">
-      <h1>{props.title}</h1>
-      <a href="/about" style={{ color: 'black' }}>
+    <div class={css`
+      background-color: red;
+    `}>
+      <h1 class={css`
+        font-size: 3em;
+      `}>{props.title}</h1>
+      <a href="/about" class={css`
+        color: red;
+      `}>
         Home
       </a>
       <a href="/about">About</a>

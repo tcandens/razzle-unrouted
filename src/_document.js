@@ -3,7 +3,7 @@ import { h } from 'preact'
 
 const isDev = process.env.NODE_ENV !== 'production'
 
-export function Document({ pathname, children, assets, data}) {
+export function Document({ pathname, markup, assets, data, criticalStyles, cachedStylesId}) {
   return (
     <html lang="">
     <head>
@@ -19,13 +19,27 @@ export function Document({ pathname, children, assets, data}) {
           crossOrigin={isDev}
         />
       ))}
+      {criticalStyles && <style dangerouslySetInnerHTML={{
+        __html: criticalStyles,
+      }}/>}
     </head>
     <body>
-      <div id="root">
-        {children}
+      <div id="root" dangerouslySetInnerHTML={{
+        __html: markup
+      }}>
       </div>
       <script src={assets[pathname].js} defer crossorigin={isDev} />
-      {assets[pathname].css && <link rel="stylesheet" href={assets[pathname].css} />}
+      {
+        !criticalStyles && 
+        !cachedStylesId && 
+        assets[pathname].css && 
+        <link rel="stylesheet" href={assets[pathname].css} />
+      }
+      {
+        criticalStyles && 
+        cachedStylesId &&
+        <link rel="stylesheet" href={`/styles/${cachedStylesId}`} />
+      }
       <script dangerouslySetInnerHTML={{
         __html: `
           window.__DATA__ = ${JSON.stringify(data)};
