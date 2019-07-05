@@ -14,6 +14,8 @@ module.exports = {
         return prev;
       }, {});
 
+      config.entry.runtime = path.resolve(__dirname, 'src/runtime')
+
       config.output.filename = dev ? '[name].js' : '[name]-[hash:8].bundle.js';
 
       config.optimization = {
@@ -23,14 +25,13 @@ module.exports = {
           cacheGroups: {
             commons: {
               name: 'commons',
-              // minChunks: 2,
-              // reuseExistingChunk: true,
               test: /[\\/]node_modules[\\/]/,
               chunks: 'initial'
             },
           }
         }
       }
+
     }
     return config;
   }

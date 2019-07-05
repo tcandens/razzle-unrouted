@@ -1,37 +1,31 @@
 import { render, h } from 'preact';
+import getRuntime from './runtime'
 /** @jsx h */
+
+function noop() {}
 
 export function createView(Component) {
 
+  let renderer = noop
 
   if (typeof window !== 'undefined') {
 
-    const data = window.__DATA__;
-
-    function renderApp() {
-      render(<Component {...data} />, document.body, document.body.firstElementChild);
+    function renderView() {
+      const data = window.__DATA__;
+      render(<Component {...data} />, document.getElementById('root'));
     }
 
-    // Initial render.
-    renderApp();
-
-    if (!window.turbolinks) {
-      import(/* webpackChunkName: 'turbolinks' */'turbolinks').then(Turbolinks => {
-        if (!Turbolinks.supported) {
-          console.warn('Turbolinks not supported')
-          return
-        }
-        window.turbolinks = Turbolinks.start()
-      })
-    }
-
-    const viewListender = document.addEventListener('turbolinks:load', function() {
-      // console.dir(renderApp)
-      // console.log('rendering!')
-      renderApp()
+    Object.defineProperty(renderView, 'name', {
+      value: `${Component.name}Renderer`,
+      writable: false,
     })
-    console.dir(viewListender, {depth: null})
+
+    const { pathname } = window.location
+    const runtime = getRuntime()
+    runtime.setRenderer(pathname, renderView)
   }
 
-  return Component
+  renderer()
+
+  return { Component, renderer }
 }
