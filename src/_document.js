@@ -14,14 +14,19 @@ export default function document(pathname, markup, assets, props) {
           ? `<link rel="stylesheet" href="${assets[pathname].css}">`
           : ''
       }
-      <script src="${assets['commons'].js}" defer ${isDev ? 'crossorigin' : ''}></script>
-      <script src="${assets['runtime'].js}" defer ${isDev ? 'crossorigin' : ''}></script>
-      <script src="${assets[pathname].js}" defer ${isDev ? 'crossorigin' : ''}></script>
+      ${['vendor', 'runtime'].map(n => (`
+        <script 
+          src="${assets[n].js}" 
+          defer 
+          ${isDev ? 'crossorigin' : ''}
+        ></script>
+        `)).join('\n')}
     </head>
     <body>
       <div id="root">
         ${markup}
       </div>
+      <script src="${assets[pathname].js}" defer ${isDev ? 'crossorigin' : ''}></script>
       <script>window.__DATA__ = ${JSON.stringify(props)};</script>
     </body>
   </html>

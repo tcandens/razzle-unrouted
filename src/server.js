@@ -8,8 +8,6 @@ import { Home } from './views/home';
 import { About } from './views/about';
 import { Something } from './views/something';
 
-const isDev = process.env.NODE_ENV !== 'production'
-
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 
 const server = express();
@@ -25,17 +23,17 @@ server
     next();
   })
   .get('/', (req, res) => {
-    res.render(Home.Component, 'home', {
+    res.render(Home, 'home', {
       title: 'home',
     });
   })
   .get('/about', (req, res) => {
-    res.render(About.Component, 'about', {
+    res.render(About, 'about', {
       title: 'about',
     });
   })
   .get('/something', (req, res) => {
-    res.render(Something.Component, 'something/index', {
+    res.render(Something, 'something/index', {
       title: 'something about',
     });
   });
