@@ -3,7 +3,7 @@ import { h } from 'preact';
 import render from 'preact-render-to-string';
 /** @jsx h */
 
-import document from './_document'
+import { Document } from './_document'
 import { Home } from './views/home';
 import { About } from './views/about';
 import { Something } from './views/something';
@@ -16,9 +16,14 @@ server
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
   .use((req, res, next) => {
     res.render = (Comp, name, props) => {
-      const markup = render(<Comp {...props} />);
-      res.status(200).send(document(name, markup, assets, props)
-      );
+      const markup = render(<Document
+        assets={assets}
+        pathname={name}
+        data={props}
+      >
+        <Comp {...props} />
+      </Document>);
+      res.status(200).send(markup)
     };
     next();
   })
