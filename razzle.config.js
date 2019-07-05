@@ -15,7 +15,23 @@ module.exports = {
       }, {});
 
       config.output.filename = dev ? '[name].js' : '[name]-[hash:8].bundle.js';
+
+      config.optimization = {
+        splitChunks: {
+          name: true,
+          chunks: 'all',
+          cacheGroups: {
+            commons: {
+              name: 'commons',
+              // minChunks: 2,
+              // reuseExistingChunk: true,
+              test: /[\\/]node_modules[\\/]/,
+              chunks: 'initial'
+            },
+          }
+        }
+      }
     }
     return config;
-  },
-};
+  }
+}

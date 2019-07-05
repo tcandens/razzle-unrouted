@@ -3,9 +3,11 @@ import { h } from 'preact';
 import render from 'preact-render-to-string';
 /** @jsx h */
 
-import Home from './views/home';
-import About from './views/about';
-import Something from './views/something';
+import { Home } from './views/home';
+import { About } from './views/about';
+import { Something } from './views/something';
+
+const isDev = process.env.NODE_ENV !== 'production'
 
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 
@@ -29,15 +31,12 @@ server
               ? `<link rel="stylesheet" href="${assets[name].css}">`
               : ''
           }
-          ${
-            process.env.NODE_ENV === 'production'
-              ? `<script src="${assets[name].js}" defer></script>`
-              : `<script src="${assets[name].js}" defer crossorigin></script>`
-          }
+          <script src="${assets['commons'].js}" defer ${isDev ? 'crossorigin' : ''}></script>
+          <script src="${assets[name].js}" defer ${isDev ? 'crossorigin' : ''}></script>
+          <script>window.__DATA__ = ${JSON.stringify(props)};</script>
       </head>
       <body>
           ${markup}
-          <script>window.__DATA__ = ${JSON.stringify(props)};</script>
       </body>
   </html>`
       );
